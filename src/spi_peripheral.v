@@ -103,10 +103,10 @@ module spi_peripheral (
                             7'b0000010: validated_data <= reg_en_pwm_out;
                             7'b0000100: validated_data <= reg_out_3_0_pwm_chanel;
                             7'b0000110: validated_data <= reg_out_7_4_pwm_chanel;
-                            7'b0001000: validated_data <= reg_pwm_gen_1_duty_cycle;
-                            7'b0001010: validated_data <= reg_pwm_gen_2_duty_cycle;
-                            7'b0001100: validated_data <= reg_pwm_gen_3_duty_cycle;
-                            7'b0001110: validated_data <= reg_pwm_gen_4_duty_cycle;
+                            7'b0001000: validated_data <= reg_pwm_gen_0_duty_cycle;
+                            7'b0001010: validated_data <= reg_pwm_gen_1_duty_cycle;
+                            7'b0001100: validated_data <= reg_pwm_gen_2_duty_cycle;
+                            7'b0001110: validated_data <= reg_pwm_gen_3_duty_cycle;
                             7'b0010000: validated_data <= reg_pwm_gen_1_0_frequency_divider;
                             7'b0010010: validated_data <= reg_pwm_gen_3_2_frequency_divider;
                             default:    validated_data <= 8'b0; // Default for invalid addresses
@@ -149,11 +149,12 @@ module spi_peripheral (
             reg_en_pwm_out <= 8'b0;
             reg_out_3_0_pwm_chanel <= 8'b0;
             reg_out_7_4_pwm_chanel <= 8'b0;
+            reg_pwm_gen_0_duty_cycle <= 8'b0;
             reg_pwm_gen_1_duty_cycle <= 8'b0;
             reg_pwm_gen_2_duty_cycle <= 8'b0;
             reg_pwm_gen_3_duty_cycle <= 8'b0;
-            reg_pwm_gen_4_duty_cycle <= 8'b0;
-            reg_pwm_frequency_divider <= 4'b0;
+            reg_pwm_gen_1_0_frequency_divider <= 8'b0;
+            reg_pwm_gen_3_2_frequency_divider <= 8'b0;
             transaction_processed <= 1'b0;
         end else if (transaction_ready && !transaction_processed) begin
             // Transaction is complete and valid, now we can safely update registers
@@ -162,10 +163,10 @@ module spi_peripheral (
                 7'b0000001: reg_en_pwm_out <= validated_data;
                 7'b0000010: reg_out_3_0_pwm_chanel <= validated_data;
                 7'b0000011: reg_out_7_4_pwm_chanel <= validated_data;
-                7'b0000100: reg_pwm_gen_1_duty_cycle <= validated_data;
-                7'b0000101: reg_pwm_gen_2_duty_cycle <= validated_data;
-                7'b0000110: reg_pwm_gen_3_duty_cycle <= validated_data;
-                7'b0000111: reg_pwm_gen_4_duty_cycle <= validated_data;
+                7'b0000100: reg_pwm_gen_0_duty_cycle <= validated_data;
+                7'b0000101: reg_pwm_gen_1_duty_cycle <= validated_data;
+                7'b0000110: reg_pwm_gen_2_duty_cycle <= validated_data;
+                7'b0000111: reg_pwm_gen_3_duty_cycle <= validated_data;
                 7'b0001000: reg_pwm_gen_1_0_frequency_divider <= validated_data;
                 7'b0001001: reg_pwm_gen_3_2_frequency_divider <= validated_data;
                 default: begin
