@@ -8,19 +8,19 @@
 module pwm_peripheral (
     input  wire       clk,      // clock
     input  wire       rst_n,     // reset_n - low to reset
-    input  reg [7:0]  reg_en_out,
-    input  reg [7:0]  reg_en_pwm_out,
-    input  reg [7:0]  reg_out_3_0_pwm_gen_channel,
-    input  reg [7:0]  reg_out_7_4_pwm_gen_channel,
-    input  reg [7:0]  reg_pwm_gen_0_ch_0_duty_cycle,
-    input  reg [7:0]  reg_pwm_gen_0_ch_1_duty_cycle,
-    input  reg [7:0]  reg_pwm_gen_1_ch_0_duty_cycle,
-    input  reg [7:0]  reg_pwm_gen_1_ch_1_duty_cycle,
-    input  reg [7:0]  reg_pwm_gen_1_0_frequency_divider,
+    input wire [7:0]  reg_en_out,
+    input wire [7:0]  reg_en_pwm_out,
+    input wire [7:0]  reg_out_3_0_pwm_gen_channel,
+    input wire [7:0]  reg_out_7_4_pwm_gen_channel,
+    input wire [7:0]  reg_pwm_gen_0_ch_0_duty_cycle,
+    input wire [7:0]  reg_pwm_gen_0_ch_1_duty_cycle,
+    input wire [7:0]  reg_pwm_gen_1_ch_0_duty_cycle,
+    input wire [7:0]  reg_pwm_gen_1_ch_1_duty_cycle,
+    input wire [7:0]  reg_pwm_gen_1_0_frequency_divider,
     output reg [7:0]  out
 );
 
-    // Base PWM speed (reg_pwm_frequency_divider = 4'b0000) is 10^7/(2*255), yielding 3921 (3921.5686274510) Hz
+    // Base PWM speed (reg_pwm_frequency_divider = 4'b0000) is 10^7/(2*255), yielding 19600 (19607.8431372549) Hz
     reg [7:0] pwm_counter_gen_0_ch_0;
     reg [7:0] pwm_counter_gen_0_ch_1;
     reg [7:0] pwm_counter_gen_1_ch_0;
@@ -53,27 +53,15 @@ module pwm_peripheral (
             clk_div_counter_gen_1 <= clk_div_counter_gen_1 + 1;
             // Check if the clock divider counter has reached the desired value for each PWM generator
             if (clk_div_counter_gen_0 == 16'h0001 << reg_pwm_gen_1_0_frequency_divider[3:0]) begin
-            clk_div_counter_gen_0 <= 0; // Reset the clock divider counter
-            pwm_counter_gen_0_ch_0 <= pwm_counter_gen_0_ch_0 + 1;
-            pwm_counter_gen_0_ch_1 <= pwm_counter_gen_0_ch_1 + 1;
-            end
-            if (pwm_counter_gen_0_ch_0 == 8'hFF) begin
-            pwm_counter_gen_0_ch_0 <= 0;
-            end
-            if (pwm_counter_gen_0_ch_1 == 8'hFF) begin
-            pwm_counter_gen_0_ch_1 <= 0;
+                clk_div_counter_gen_0 <= 0; // Reset the clock divider counter
+                pwm_counter_gen_0_ch_0 <= pwm_counter_gen_0_ch_0 + 1;
+                pwm_counter_gen_0_ch_1 <= pwm_counter_gen_0_ch_1 + 1;
             end
 
             if (clk_div_counter_gen_1 == 16'h0001 << reg_pwm_gen_1_0_frequency_divider[7:4]) begin
             clk_div_counter_gen_1 <= 0; // Reset the clock divider counter
             pwm_counter_gen_1_ch_0 <= pwm_counter_gen_1_ch_0 + 1;
             pwm_counter_gen_1_ch_1 <= pwm_counter_gen_1_ch_1 + 1;
-            end
-            if (pwm_counter_gen_1_ch_0 == 8'hFF) begin
-            pwm_counter_gen_1_ch_0 <= 0;
-            end
-            if (pwm_counter_gen_1_ch_1 == 8'hFF) begin
-            pwm_counter_gen_1_ch_1 <= 0;
             end
 
             // Check if the PWM is enabled for output channel 0
