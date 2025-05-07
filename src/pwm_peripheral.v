@@ -37,7 +37,6 @@ module pwm_peripheral (
         if (!rst_n) begin
             out <= 0;
             pwm_counter <= 0;
-            clk_counter <= 0;
             clk_div_counter <= 0;
         end else begin
             // Increment the clock divider counter
