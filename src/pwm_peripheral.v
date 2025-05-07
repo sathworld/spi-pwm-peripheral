@@ -20,14 +20,13 @@ module pwm_peripheral (
     output reg [7:0]  out
 );
 
-    localparam clk_div_trig = 12; // Divide by (12+1)*255, yielding 3000 (3016.5912) Hz
+    // Base PWM speed (reg_pwm_frequency_divider = 4'b0000) is 10^7/(2*255), yielding 3921 (3921.5686274510) Hz
     reg [4:0] clk_counter;
     reg [7:0] pwm_counter;
     
     // Set up clock divider based on the register value
-    reg [7:0] clk_divider = 8'hFF; // Default value for clk_divider
-     // Counter for clock division
-    reg [:0] clk_div_counter = 0;
+    // Counter for clock division
+    reg [15:0] clk_div_counter;
 
     
     wire pwm_signal_1 = pwm_counter < reg_pwm_gen_1_duty_cycle;
@@ -40,8 +39,15 @@ module pwm_peripheral (
             out <= 0;
             pwm_counter <= 0;
             clk_counter <= 0;
+            clk_div_counter <= 0;
         end else begin
-            clk_counter <= clk_counter + 1;
+            // Increment the clock divider counter
+            clk_div_counter <= clk_div_counter + 1;
+            // Check if the clock divider counter has reached the desired value
+            if (clk_div_counter == 15'h0001 << reg_pwm_frequency_divider) begin
+                clk_div_counter <= 0; // Reset the clock divider counter
+                clk_counter <= clk_counter + 1;
+            end
             if (clk_counter == clk_div_trig) begin
                 pwm_counter <= pwm_counter + 1;
                 clk_counter <= 0;
@@ -160,9 +166,6 @@ module pwm_peripheral (
             end else begin
                 out[7] <= reg_en_out[7]; // If not enabled, set to the value of reg_en_out[7]
             end
-
-
         end
     end
-
 endmodule
