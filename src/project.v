@@ -16,7 +16,8 @@ module tt_um_sathworld_spi_pwm_peripheral (
     input  wire       rst_n     // reset_n - low to reset
 );
 
-  assign uio_oe = 8'h00; // Set all IOs to input mode
+  assign uio_oe = 8'hFF; // Set all IOs to output mode
+  assign uio_out[6:0] = 7'b0000000; // Set all IOs to low
 
   wire [7:0] wire_en_out;
   wire [7:0] wire_en_pwm_out;
@@ -62,7 +63,7 @@ module tt_um_sathworld_spi_pwm_peripheral (
   );
 
   // List all unused inputs to prevent warnings
-  wire _unused = &{ena, ui_in[7:3], uio_in[6:0], 1'b0};
+  wire _unused = &{ena, ui_in[7:3], uio_in[7:0], 1'b0};
 
 
 endmodule

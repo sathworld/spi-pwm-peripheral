@@ -42,7 +42,7 @@ module pwm_peripheral (
             // Increment the clock divider counter
             clk_div_counter <= clk_div_counter + 1;
             // Check if the clock divider counter has reached the desired value
-            if (clk_div_counter == 15'h0001 << reg_pwm_frequency_divider) begin
+            if (clk_div_counter == 16'h0001 << reg_pwm_frequency_divider) begin
                 clk_div_counter <= 0; // Reset the clock divider counter
                 pwm_counter <= pwm_counter + 1;
             end else if (pwm_counter == 8'hFF) begin

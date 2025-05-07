@@ -74,7 +74,7 @@ module spi_peripheral (
     // Process SPI protocol in the clk domain
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
-            address <= 8'b0;
+            address <= 7'b0;
             data_to_be_stored <= 8'b0;
             num_of_clk_cycles <= 5'b0;
             is_transacion_valid <= 1'b0;
