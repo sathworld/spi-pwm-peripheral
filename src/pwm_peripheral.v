@@ -21,7 +21,6 @@ module pwm_peripheral (
 );
 
     // Base PWM speed (reg_pwm_frequency_divider = 4'b0000) is 10^7/(2*255), yielding 3921 (3921.5686274510) Hz
-    reg [4:0] clk_counter;
     reg [7:0] pwm_counter;
     
     // Set up clock divider based on the register value
@@ -46,11 +45,7 @@ module pwm_peripheral (
             // Check if the clock divider counter has reached the desired value
             if (clk_div_counter == 15'h0001 << reg_pwm_frequency_divider) begin
                 clk_div_counter <= 0; // Reset the clock divider counter
-                clk_counter <= clk_counter + 1;
-            end
-            if (clk_counter == clk_div_trig) begin
                 pwm_counter <= pwm_counter + 1;
-                clk_counter <= 0;
             end else if (pwm_counter == 8'hFF) begin
                 pwm_counter <= 0;
             end
