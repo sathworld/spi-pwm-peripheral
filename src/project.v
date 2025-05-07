@@ -21,8 +21,8 @@ module tt_um_sathworld_spi_pwm_peripheral (
 
   wire [7:0] wire_en_out;
   wire [7:0] wire_en_pwm_out;
-  wire [7:0] wire_out_3_0_pwm_chanel;
-  wire [7:0] wire_out_7_4_pwm_chanel;
+  wire [7:0] wire_out_3_0_pwm_gen_channel;
+  wire [7:0] wire_out_7_4_pwm_gen_channel;
   wire [7:0] wire_pwm_gen_0_ch_0_duty_cycle;
   wire [7:0] wire_pwm_gen_0_ch_1_duty_cycle;
   wire [7:0] wire_pwm_gen_1_ch_0_duty_cycle;
@@ -38,8 +38,8 @@ module tt_um_sathworld_spi_pwm_peripheral (
     .rst_n(rst_n),
     .reg_en_out(wire_en_out),
     .reg_en_pwm_out(wire_en_pwm_out),
-    .reg_out_3_0_pwm_chanel(wire_out_3_0_pwm_chanel),
-    .reg_out_7_4_pwm_chanel(wire_out_7_4_pwm_chanel),
+    .reg_out_3_0_pwm_chanel(wire_out_3_0_pwm_gen_channel),
+    .reg_out_7_4_pwm_chanel(wire_out_7_4_pwm_gen_channel),
     .reg_pwm_gen_0_ch_0_duty_cycle(wire_pwm_gen_0_ch_0_duty_cycle),
     .reg_pwm_gen_0_ch_1_duty_cycle(wire_pwm_gen_0_ch_1_duty_cycle),
     .reg_pwm_gen_1_ch_0_duty_cycle(wire_pwm_gen_1_ch_0_duty_cycle),
@@ -52,8 +52,8 @@ module tt_um_sathworld_spi_pwm_peripheral (
     .rst_n(rst_n),
     .reg_en_out(wire_en_out),
     .reg_en_pwm_out(wire_en_pwm_out),
-    .reg_out_3_0_pwm_chanel(wire_out_3_0_pwm_chanel),
-    .reg_out_7_4_pwm_chanel(wire_out_7_4_pwm_chanel),
+    .reg_out_3_0_pwm_gen_channel(wire_out_3_0_pwm_gen_channel),
+    .reg_out_7_4_pwm_gen_channel(wire_out_7_4_pwm_gen_channel),
     .reg_pwm_gen_0_ch_0_duty_cycle(wire_pwm_gen_0_ch_0_duty_cycle),
     .reg_pwm_gen_0_ch_1_duty_cycle(wire_pwm_gen_0_ch_1_duty_cycle),
     .reg_pwm_gen_1_ch_0_duty_cycle(wire_pwm_gen_1_ch_0_duty_cycle),
