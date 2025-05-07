@@ -12,51 +12,86 @@ module pwm_peripheral (
     input  reg [7:0]  reg_en_pwm_out,
     input  reg [7:0]  reg_out_3_0_pwm_chanel,
     input  reg [7:0]  reg_out_7_4_pwm_chanel,
+    input  reg [7:0]  reg_pwm_gen_0_duty_cycle,
     input  reg [7:0]  reg_pwm_gen_1_duty_cycle,
     input  reg [7:0]  reg_pwm_gen_2_duty_cycle,
     input  reg [7:0]  reg_pwm_gen_3_duty_cycle,
-    input  reg [7:0]  reg_pwm_gen_4_duty_cycle,
-    input  reg [3:0]  reg_pwm_frequency_divider,
+    input  reg [7:0]  reg_pwm_gen_1_0_frequency_divider,
+    input  reg [7:0]  reg_pwm_gen_3_2_frequency_divider,
     output reg [7:0]  out
 );
 
     // Base PWM speed (reg_pwm_frequency_divider = 4'b0000) is 10^7/(2*255), yielding 3921 (3921.5686274510) Hz
-    reg [7:0] pwm_counter;
+    reg [7:0] pwm_counter_gen_0;
+    reg [7:0] pwm_counter_gen_1;
+    reg [7:0] pwm_counter_gen_2;
+    reg [7:0] pwm_counter_gen_3;
     
     // Set up clock divider based on the register value
     // Counter for clock division
-    reg [15:0] clk_div_counter;
+    reg [15:0] clk_div_counter_gen_0;
+    reg [15:0] clk_div_counter_gen_1;
+    reg [15:0] clk_div_counter_gen_2;
+    reg [15:0] clk_div_counter_gen_3;
 
     
-    wire pwm_signal_1 = pwm_counter < reg_pwm_gen_1_duty_cycle;
-    wire pwm_signal_2 = pwm_counter < reg_pwm_gen_2_duty_cycle;
-    wire pwm_signal_3 = pwm_counter < reg_pwm_gen_3_duty_cycle;
-    wire pwm_signal_4 = pwm_counter < reg_pwm_gen_4_duty_cycle;
+    wire pwm_signal_0 = pwm_counter_gen_0 < reg_pwm_gen_0_duty_cycle;
+    wire pwm_signal_1 = pwm_counter_gen_1 < reg_pwm_gen_1_duty_cycle;
+    wire pwm_signal_2 = pwm_counter_gen_2 < reg_pwm_gen_2_duty_cycle;
+    wire pwm_signal_3 = pwm_counter_gen_3 < reg_pwm_gen_3_duty_cycle;
 
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
             out <= 0;
-            pwm_counter <= 0;
-            clk_div_counter <= 0;
+            pwm_counter_gen_0 <= 0;
+            pwm_counter_gen_1 <= 0;
+            pwm_counter_gen_2 <= 0;
+            pwm_counter_gen_3 <= 0;
+            clk_div_counter_gen_0 <= 0;
+            clk_div_counter_gen_1 <= 0;
+            clk_div_counter_gen_2 <= 0;
+            clk_div_counter_gen_3 <= 0;
         end else begin
-            // Increment the clock divider counter
-            clk_div_counter <= clk_div_counter + 1;
-            // Check if the clock divider counter has reached the desired value
-            if (clk_div_counter == 16'h0001 << reg_pwm_frequency_divider) begin
-                clk_div_counter <= 0; // Reset the clock divider counter
-                pwm_counter <= pwm_counter + 1;
-            end else if (pwm_counter == 8'hFF) begin
-                pwm_counter <= 0;
+            // Increment the clock divider counter for each PWM generator
+            clk_div_counter_gen_0 <= clk_div_counter_gen_0 + 1;
+            clk_div_counter_gen_1 <= clk_div_counter_gen_1 + 1;
+            clk_div_counter_gen_2 <= clk_div_counter_gen_2 + 1;
+            clk_div_counter_gen_3 <= clk_div_counter_gen_3 + 1;
+            // Check if the clock divider counter has reached the desired value for each PWM generator
+            if (clk_div_counter_gen_0 == 16'h0001 << reg_pwm_gen_1_0_frequency_divider) begin
+                clk_div_counter_gen_0 <= 0; // Reset the clock divider counter
+                pwm_counter_gen_0 <= pwm_counter_gen_0 + 1;
+            end else if (pwm_counter_gen_0 == 8'hFF) begin
+                pwm_counter_gen_0 <= 0;
             end
+            if (clk_div_counter_gen_1 == 16'h0001 << reg_pwm_gen_1_0_frequency_divider) begin
+                clk_div_counter_gen_1 <= 0; // Reset the clock divider counter
+                pwm_counter_gen_1 <= pwm_counter_gen_1 + 1;
+            end else if (pwm_counter_gen_1 == 8'hFF) begin
+                pwm_counter_gen_1 <= 0;
+            end
+            if (clk_div_counter_gen_2 == 16'h0001 << reg_pwm_gen_3_2_frequency_divider) begin
+                clk_div_counter_gen_2 <= 0; // Reset the clock divider counter
+                pwm_counter_gen_2 <= pwm_counter_gen_2 + 1;
+            end else if (pwm_counter_gen_2 == 8'hFF) begin
+                pwm_counter_gen_2 <= 0;
+            end
+            if (clk_div_counter_gen_3 == 16'h0001 << reg_pwm_gen_3_2_frequency_divider) begin
+                clk_div_counter_gen_3 <= 0; // Reset the clock divider counter
+                pwm_counter_gen_3 <= pwm_counter_gen_3 + 1;
+            end else if (pwm_counter_gen_3 == 8'hFF) begin
+                pwm_counter_gen_3 <= 0;
+            end
+
             // Check if the PWM is enabled for each channel
             // Check if the PWM is enabled for channel 0
             if (reg_en_pwm_out[0] & reg_en_out[0]) begin
-                // Connect the PWM channel 0 to the output based on the register values (00 for channel 1, 01 for channel 2, etc.)
+                // Connect the PWM channel 0 to the output based on the register values (00 for channel 0, 01 for channel 1, etc.)
                 case (reg_out_3_0_pwm_chanel[1:0])
-                    2'b00: out[0] <= pwm_signal_1;
-                    2'b01: out[0] <= pwm_signal_2;
-                    2'b10: out[0] <= pwm_signal_3;
-                    2'b11: out[0] <= pwm_signal_4;
+                    2'b00: out[0] <= pwm_signal_0;
+                    2'b01: out[0] <= pwm_signal_1;
+                    2'b10: out[0] <= pwm_signal_2;
+                    2'b11: out[0] <= pwm_signal_3;
                     default: out[0] <= 1'b0; // Default case to avoid latches
                 endcase
             end else begin
@@ -67,10 +102,10 @@ module pwm_peripheral (
             if (reg_en_pwm_out[1] & reg_en_out[1]) begin
                 // Connect the PWM channel 1 to the output based on the register values
                 case (reg_out_3_0_pwm_chanel[3:2])
-                    2'b00: out[1] <= pwm_signal_1;
-                    2'b01: out[1] <= pwm_signal_2;
-                    2'b10: out[1] <= pwm_signal_3;
-                    2'b11: out[1] <= pwm_signal_4;
+                    2'b00: out[1] <= pwm_signal_0;
+                    2'b01: out[1] <= pwm_signal_1;
+                    2'b10: out[1] <= pwm_signal_2;
+                    2'b11: out[1] <= pwm_signal_3;
                     default: out[1] <= 1'b0; // Default case to avoid latches
                 endcase
             end else begin
@@ -81,10 +116,10 @@ module pwm_peripheral (
             if (reg_en_pwm_out[2] & reg_en_out[2]) begin
                 // Connect the PWM channel 2 to the output based on the register values
                 case (reg_out_3_0_pwm_chanel[5:4])
-                    2'b00: out[2] <= pwm_signal_1;
-                    2'b01: out[2] <= pwm_signal_2;
-                    2'b10: out[2] <= pwm_signal_3;
-                    2'b11: out[2] <= pwm_signal_4;
+                    2'b00: out[2] <= pwm_signal_0;
+                    2'b01: out[2] <= pwm_signal_1;
+                    2'b10: out[2] <= pwm_signal_2;
+                    2'b11: out[2] <= pwm_signal_3;
                     default: out[2] <= 1'b0; // Default case to avoid latches
                 endcase
             end else begin
@@ -95,10 +130,10 @@ module pwm_peripheral (
             if (reg_en_pwm_out[3] & reg_en_out[3]) begin
                 // Connect the PWM channel 3 to the output based on the register values
                 case (reg_out_3_0_pwm_chanel[7:6])
-                    2'b00: out[3] <= pwm_signal_1;
-                    2'b01: out[3] <= pwm_signal_2;
-                    2'b10: out[3] <= pwm_signal_3;
-                    2'b11: out[3] <= pwm_signal_4;
+                    2'b00: out[3] <= pwm_signal_0;
+                    2'b01: out[3] <= pwm_signal_1;
+                    2'b10: out[3] <= pwm_signal_2;
+                    2'b11: out[3] <= pwm_signal_3;
                     default: out[3] <= 1'b0; // Default case to avoid latches
                 endcase
             end else begin
@@ -109,10 +144,10 @@ module pwm_peripheral (
             if (reg_en_pwm_out[4] & reg_en_out[4]) begin
                 // Connect the PWM channel 4 to the output based on the register values
                 case (reg_out_7_4_pwm_chanel[1:0])
-                    2'b00: out[4] <= pwm_signal_1;
-                    2'b01: out[4] <= pwm_signal_2;
-                    2'b10: out[4] <= pwm_signal_3;
-                    2'b11: out[4] <= pwm_signal_4;
+                    2'b00: out[4] <= pwm_signal_0;
+                    2'b01: out[4] <= pwm_signal_1;
+                    2'b10: out[4] <= pwm_signal_2;
+                    2'b11: out[4] <= pwm_signal_3;
                     default: out[4] <= 1'b0; // Default case to avoid latches
                 endcase
             end else begin
@@ -123,10 +158,10 @@ module pwm_peripheral (
             if (reg_en_pwm_out[5] & reg_en_out[5]) begin
                 // Connect the PWM channel 5 to the output based on the register values
                 case (reg_out_7_4_pwm_chanel[3:2])
-                    2'b00: out[5] <= pwm_signal_1;
-                    2'b01: out[5] <= pwm_signal_2;
-                    2'b10: out[5] <= pwm_signal_3;
-                    2'b11: out[5] <= pwm_signal_4;
+                    2'b00: out[5] <= pwm_signal_0;
+                    2'b01: out[5] <= pwm_signal_1;
+                    2'b10: out[5] <= pwm_signal_2;
+                    2'b11: out[5] <= pwm_signal_3;
                     default: out[5] <= 1'b0; // Default case to avoid latches
                 endcase
             end else begin
@@ -137,10 +172,10 @@ module pwm_peripheral (
             if (reg_en_pwm_out[6] & reg_en_out[6]) begin
                 // Connect the PWM channel 6 to the output based on the register values
                 case (reg_out_7_4_pwm_chanel[5:4])
-                    2'b00: out[6] <= pwm_signal_1;
-                    2'b01: out[6] <= pwm_signal_2;
-                    2'b10: out[6] <= pwm_signal_3;
-                    2'b11: out[6] <= pwm_signal_4;
+                    2'b00: out[6] <= pwm_signal_0;
+                    2'b01: out[6] <= pwm_signal_1;
+                    2'b10: out[6] <= pwm_signal_2;
+                    2'b11: out[6] <= pwm_signal_3;
                     default: out[6] <= 1'b0; // Default case to avoid latches
                 endcase
             end else begin
@@ -151,10 +186,10 @@ module pwm_peripheral (
             if (reg_en_pwm_out[7] & reg_en_out[7]) begin
                 // Connect the PWM channel 7 to the output based on the register values
                 case (reg_out_7_4_pwm_chanel[7:6])
-                    2'b00: out[7] <= pwm_signal_1;
-                    2'b01: out[7] <= pwm_signal_2;
-                    2'b10: out[7] <= pwm_signal_3;
-                    2'b11: out[7] <= pwm_signal_4;
+                    2'b00: out[7] <= pwm_signal_0;
+                    2'b01: out[7] <= pwm_signal_1;
+                    2'b10: out[7] <= pwm_signal_2;
+                    2'b11: out[7] <= pwm_signal_3;
                     default: out[7] <= 1'b0; // Default case to avoid latches
                 endcase
             end else begin

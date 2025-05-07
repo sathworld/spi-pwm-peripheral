@@ -23,11 +23,12 @@ module tt_um_sathworld_spi_pwm_peripheral (
   wire [7:0] wire_en_pwm_out;
   wire [7:0] wire_out_3_0_pwm_chanel;
   wire [7:0] wire_out_7_4_pwm_chanel;
+  wire [7:0] wire_pwm_gen_0_duty_cycle;
   wire [7:0] wire_pwm_gen_1_duty_cycle;
   wire [7:0] wire_pwm_gen_2_duty_cycle;
   wire [7:0] wire_pwm_gen_3_duty_cycle;
-  wire [7:0] wire_pwm_gen_4_duty_cycle;
-  wire [3:0] wire_pwm_frequency_divider;
+  wire [7:0] wire_pwm_gen_1_0_frequency_divider;
+  wire [7:0] wire_pwm_gen_3_2_frequency_divider;
 
   spi_peripheral spi_peripheral_inst (
     .nCS(ui_in[2]),
@@ -40,11 +41,12 @@ module tt_um_sathworld_spi_pwm_peripheral (
     .reg_en_pwm_out(wire_en_pwm_out),
     .reg_out_3_0_pwm_chanel(wire_out_3_0_pwm_chanel),
     .reg_out_7_4_pwm_chanel(wire_out_7_4_pwm_chanel),
+    .reg_pwm_gen_0_duty_cycle(wire_pwm_gen_0_duty_cycle),
     .reg_pwm_gen_1_duty_cycle(wire_pwm_gen_1_duty_cycle),
     .reg_pwm_gen_2_duty_cycle(wire_pwm_gen_2_duty_cycle),
     .reg_pwm_gen_3_duty_cycle(wire_pwm_gen_3_duty_cycle),
-    .reg_pwm_gen_4_duty_cycle(wire_pwm_gen_4_duty_cycle),
-    .reg_pwm_frequency_divider(wire_pwm_frequency_divider)
+    .reg_pwm_gen_1_0_frequency_divider(wire_pwm_gen_1_0_frequency_divider),
+    .reg_pwm_gen_3_2_frequency_divider(wire_pwm_gen_3_2_frequency_divider)
   );
 
   pwm_peripheral pwm_peripheral_inst (
@@ -54,11 +56,12 @@ module tt_um_sathworld_spi_pwm_peripheral (
     .reg_en_pwm_out(wire_en_pwm_out),
     .reg_out_3_0_pwm_chanel(wire_out_3_0_pwm_chanel),
     .reg_out_7_4_pwm_chanel(wire_out_7_4_pwm_chanel),
+    .reg_pwm_gen_0_duty_cycle(wire_pwm_gen_0_duty_cycle),
     .reg_pwm_gen_1_duty_cycle(wire_pwm_gen_1_duty_cycle),
     .reg_pwm_gen_2_duty_cycle(wire_pwm_gen_2_duty_cycle),
     .reg_pwm_gen_3_duty_cycle(wire_pwm_gen_3_duty_cycle),
-    .reg_pwm_gen_4_duty_cycle(wire_pwm_gen_4_duty_cycle),
-    .reg_pwm_frequency_divider(wire_pwm_frequency_divider),
+    .reg_pwm_gen_1_0_frequency_divider(wire_pwm_gen_1_0_frequency_divider),
+    .reg_pwm_gen_3_2_frequency_divider(wire_pwm_gen_3_2_frequency_divider),
     .out(uo_out)
   );
 
