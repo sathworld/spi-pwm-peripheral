@@ -5,7 +5,7 @@
 
 `default_nettype none
 
-module tt_um_example (
+module tt_um_sathworld_spi_pwm_peripheral (
     input  wire [7:0] ui_in,    // Dedicated inputs
     output wire [7:0] uo_out,   // Dedicated outputs
     input  wire [7:0] uio_in,   // IOs: Input path
@@ -16,12 +16,49 @@ module tt_um_example (
     input  wire       rst_n     // reset_n - low to reset
 );
 
-  // All output pins must be assigned. If not used, assign to 0.
-  assign uo_out  = ui_in + uio_in;  // Example: ou_out is the sum of ui_in and uio_in
-  assign uio_out = 0;
-  assign uio_oe  = 0;
+  assign uio_oe = 8'h00; // Set all IOs to input mode
+
+  wire [7:0] wire_en_out;
+  wire [7:0] wire_en_pwm_out;
+  wire [7:0] wire_out_3_0_pwm_chanel;
+  wire [7:0] wire_out_7_4_pwm_chanel;
+  wire [7:0] wire_pwm_gen_1_duty_cycle;
+  wire [7:0] wire_pwm_gen_2_duty_cycle;
+  wire [7:0] wire_pwm_gen_3_duty_cycle;
+  wire [7:0] wire_pwm_gen_4_duty_cycle;
+  wire [3:0] wire_pwm_frequency_divider;
+
+  spi_peripheral spi_peripheral_inst (
+    .nCS(ui_in[2]),
+    .SCLK(ui_in[0]),
+    .COPI(ui_in[1]),
+    .CIPO(uio_out[7]),
+    .clk(clk),
+    .rst_n(rst_n),
+    .reg_en_out(wire_en_out),
+    .reg_en_pwm_out(wire_en_pwm_out),
+    .reg_out_3_0_pwm_chanel(wire_out_3_0_pwm_chanel),
+    .reg_out_7_4_pwm_chanel(wire_out_7_4_pwm_chanel),
+    .reg_pwm_gen_1_duty_cycle(wire_pwm_gen_1_duty_cycle),
+    .reg_pwm_gen_2_duty_cycle(wire_pwm_gen_2_duty_cycle),
+    .reg_pwm_gen_3_duty_cycle(wire_pwm_gen_3_duty_cycle),
+    .reg_pwm_gen_4_duty_cycle(wire_pwm_gen_4_duty_cycle),
+    .reg_pwm_frequency_divider(wire_pwm_frequency_divider)
+  );
+
+  pwm_peripheral pwm_peripheral_inst (
+    .clk(clk),
+    .rst_n(rst_n),
+    .en_reg_out_7_0(en_reg_out_7_0),
+    .en_reg_out_15_8(en_reg_out_15_8),
+    .en_reg_pwm_7_0(en_reg_pwm_7_0),
+    .en_reg_pwm_15_8(en_reg_pwm_15_8),
+    .pwm_duty_cycle(pwm_duty_cycle),
+    .out({uio_out, uo_out})
+  );
 
   // List all unused inputs to prevent warnings
-  wire _unused = &{ena, clk, rst_n, 1'b0};
+  wire _unused = &{ena, ui_in[7:3], uio_in[6:0], 1'b0};
+
 
 endmodule
