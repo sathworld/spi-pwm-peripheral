@@ -211,7 +211,7 @@ async def send_spi_transaction(dut, r_w, address, data):
     
     return ui_in_logicarray(ncs, bit, sclk), cipo_byte
 
-#@cocotb.test()
+@cocotb.test()
 async def test_spi(dut):
     dut._log.info("Start SPI test")
 
