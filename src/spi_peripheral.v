@@ -99,14 +99,14 @@ module spi_peripheral (
                         // Load validated_data with the register value to be transmitted
                         case ({address[6:1], COPI_sync2}) // Use bits 6:1 plus incoming bit 0
                             7'b0000000: validated_data <= reg_en_out;
-                            7'b0000010: validated_data <= reg_en_pwm_out;
-                            7'b0000100: validated_data <= reg_out_3_0_pwm_chanel;
-                            7'b0000110: validated_data <= reg_out_7_4_pwm_chanel;
-                            7'b0001000: validated_data <= reg_pwm_gen_0_duty_cycle;
-                            7'b0001010: validated_data <= reg_pwm_gen_1_duty_cycle;
-                            7'b0001100: validated_data <= reg_pwm_gen_2_duty_cycle;
-                            7'b0001110: validated_data <= reg_pwm_gen_3_duty_cycle;
-                            7'b0010000: validated_data <= reg_pwm_gen_1_0_frequency_divider;
+                            7'b0000001: validated_data <= reg_en_pwm_out;
+                            7'b0000010: validated_data <= reg_out_3_0_pwm_gen_channel;
+                            7'b0000011: validated_data <= reg_out_7_4_pwm_gen_channel;
+                            7'b0000100: validated_data <= reg_pwm_gen_0_ch_0_duty_cycle;
+                            7'b0000101: validated_data <= reg_pwm_gen_0_ch_1_duty_cycle;
+                            7'b0000110: validated_data <= reg_pwm_gen_1_ch_0_duty_cycle;
+                            7'b0000111: validated_data <= reg_pwm_gen_1_ch_1_duty_cycle;
+                            7'b0001000: validated_data <= reg_pwm_gen_1_0_frequency_divider;
                             default:    validated_data <= 8'b0; // Default for invalid addresses
                         endcase
                     end
