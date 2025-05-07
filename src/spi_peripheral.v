@@ -6,19 +6,18 @@ module spi_peripheral (
     output wire       CIPO,      // SPI output data
     input  wire       clk,      // clock
     input  wire       rst_n,     // reset_n - low to reset
-    output reg [7:0] reg_en_out,
-    output reg [7:0] reg_en_pwm_out,
-    output reg [7:0] reg_out_3_0_pwm_chanel,
-    output reg [7:0] reg_out_7_4_pwm_chanel,
-    output reg [7:0] reg_pwm_gen_0_duty_cycle,
-    output reg [7:0] reg_pwm_gen_1_duty_cycle,
-    output reg [7:0] reg_pwm_gen_2_duty_cycle,
-    output reg [7:0] reg_pwm_gen_3_duty_cycle,
-    output reg [7:0] reg_pwm_gen_1_0_frequency_divider,
-    output reg [7:0] reg_pwm_gen_3_2_frequency_divider
+    output reg [7:0]  reg_en_out,
+    output reg [7:0]  reg_en_pwm_out,
+    output reg [7:0]  reg_out_3_0_pwm_gen_channel,
+    output reg [7:0]  reg_out_7_4_pwm_gen_channel,
+    output reg [7:0]  reg_pwm_gen_0_ch_0_duty_cycle,
+    output reg [7:0]  reg_pwm_gen_0_ch_1_duty_cycle,
+    output reg [7:0]  reg_pwm_gen_1_ch_0_duty_cycle,
+    output reg [7:0]  reg_pwm_gen_1_ch_1_duty_cycle,
+    output reg [7:0]  reg_pwm_gen_1_0_frequency_divider
 );
 
-    localparam max_address = 7'd9; // Maximum address for 10 registers (0x00 to 0x09)
+    localparam max_address = 7'd8; // Maximum address for 9 registers (0x00 to 0x08)
     
     reg is_transacion_valid;
     reg [6:0] address;
@@ -108,7 +107,6 @@ module spi_peripheral (
                             7'b0001100: validated_data <= reg_pwm_gen_2_duty_cycle;
                             7'b0001110: validated_data <= reg_pwm_gen_3_duty_cycle;
                             7'b0010000: validated_data <= reg_pwm_gen_1_0_frequency_divider;
-                            7'b0010010: validated_data <= reg_pwm_gen_3_2_frequency_divider;
                             default:    validated_data <= 8'b0; // Default for invalid addresses
                         endcase
                     end
@@ -147,28 +145,26 @@ module spi_peripheral (
         if (!rst_n) begin
             reg_en_out <= 8'b0;
             reg_en_pwm_out <= 8'b0;
-            reg_out_3_0_pwm_chanel <= 8'b0;
-            reg_out_7_4_pwm_chanel <= 8'b0;
-            reg_pwm_gen_0_duty_cycle <= 8'b0;
-            reg_pwm_gen_1_duty_cycle <= 8'b0;
-            reg_pwm_gen_2_duty_cycle <= 8'b0;
-            reg_pwm_gen_3_duty_cycle <= 8'b0;
+            reg_out_3_0_pwm_gen_channel <= 8'b0;
+            reg_out_7_4_pwm_gen_channel <= 8'b0;
+            reg_pwm_gen_0_ch_0_duty_cycle <= 8'b0;
+            reg_pwm_gen_0_ch_1_duty_cycle <= 8'b0;
+            reg_pwm_gen_1_ch_0_duty_cycle <= 8'b0;
+            reg_pwm_gen_1_ch_1_duty_cycle <= 8'b0;
             reg_pwm_gen_1_0_frequency_divider <= 8'b0;
-            reg_pwm_gen_3_2_frequency_divider <= 8'b0;
             transaction_processed <= 1'b0;
         end else if (transaction_ready && !transaction_processed) begin
             // Transaction is complete and valid, now we can safely update registers
             case (validated_address[6:0])
                 7'b0000000: reg_en_out <= validated_data;
                 7'b0000001: reg_en_pwm_out <= validated_data;
-                7'b0000010: reg_out_3_0_pwm_chanel <= validated_data;
-                7'b0000011: reg_out_7_4_pwm_chanel <= validated_data;
-                7'b0000100: reg_pwm_gen_0_duty_cycle <= validated_data;
-                7'b0000101: reg_pwm_gen_1_duty_cycle <= validated_data;
-                7'b0000110: reg_pwm_gen_2_duty_cycle <= validated_data;
-                7'b0000111: reg_pwm_gen_3_duty_cycle <= validated_data;
+                7'b0000010: reg_out_3_0_pwm_gen_channel <= validated_data;
+                7'b0000011: reg_out_7_4_pwm_gen_channel <= validated_data;
+                7'b0000100: reg_pwm_gen_0_ch_0_duty_cycle <= validated_data;
+                7'b0000101: reg_pwm_gen_0_ch_1_duty_cycle <= validated_data;
+                7'b0000110: reg_pwm_gen_1_ch_0_duty_cycle <= validated_data;
+                7'b0000111: reg_pwm_gen_1_ch_1_duty_cycle <= validated_data;
                 7'b0001000: reg_pwm_gen_1_0_frequency_divider <= validated_data;
-                7'b0001001: reg_pwm_gen_3_2_frequency_divider <= validated_data;
                 default: begin
                     // Invalid address, do nothing or handle error
                 end
