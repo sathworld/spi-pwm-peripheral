@@ -38,7 +38,6 @@ module pwm_peripheral (
 
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
-            out <= 0;
 
             pwm_counter_gen_0_ch_0 <= 0;
             pwm_counter_gen_0_ch_1 <= 0;
