@@ -20,7 +20,7 @@ module pwm_peripheral (
     output reg [7:0]  out
 );
 
-    // Base PWM speed (reg_pwm_frequency_divider = 4'b0000) is 10^7/(2*255), yielding 19600 (19607.8431372549) Hz
+    // Base PWM speed (reg_pwm_frequency_divider = 4'b0000) is 10^7/(256), yielding 39062.5 Hz
     reg [7:0] pwm_counter_gen_0_ch_0;
     reg [7:0] pwm_counter_gen_0_ch_1;
     reg [7:0] pwm_counter_gen_1_ch_0;

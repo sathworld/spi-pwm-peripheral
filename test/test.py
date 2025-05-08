@@ -402,7 +402,7 @@ async def test_clk_div(dut):
         ui_in_val, cipo_data = await send_spi_transaction(dut, 1, 0x08, i)  # Write transaction
         await ClockCycles(dut.clk, 30000)
         await ClockCycles(dut.clk, int(30000*pow(2, i-2)))
-        await test_pwm_freq(dut, 19607*pow(2, -i + 1))
+        await test_pwm_freq(dut, 39062.5*pow(2, -i))
         await ClockCycles(dut.clk, 30000)
         await ClockCycles(dut.clk, int(30000*pow(2, i-2)))
     dut._log.info("PWM freq test completed successfully")
