@@ -17,7 +17,7 @@ module pwm_peripheral (
     input wire [7:0]  reg_pwm_gen_1_ch_0_duty_cycle,
     input wire [7:0]  reg_pwm_gen_1_ch_1_duty_cycle,
     input wire [7:0]  reg_pwm_gen_1_0_frequency_divider,
-    output reg [7:0]  out
+    output wire [7:0]  out
 );
 
     // Base PWM speed (reg_pwm_frequency_divider = 4'b0000) is 10^7/(2*255), yielding 19600 (19607.8431372549) Hz
