@@ -3,7 +3,7 @@ project:
   title:        "SPI-connected PWM generator"      # Project title
   author:       "Damir G"      # Your name
   discord:      "saworld"      # Your discord username, for communication and automatically assigning you a Tapeout role (optional)
-  description:  "SPI-connected PWM generator featuring 8 Outputs with 4 independent Channels"      # One line description of what your project does
+  description:  "SPI-connected PWM generator featuring 8 outputs with 2 independent generators and 4 total PWM channels"      # One line description of what your project does
   language:     "Verilog" # other examples include SystemVerilog, Amaranth, VHDL, etc
   clock_hz:     10000000       # Clock frequency in Hz (or 0 if not applicable)
 
