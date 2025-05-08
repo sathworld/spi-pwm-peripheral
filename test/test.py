@@ -306,6 +306,62 @@ async def test_pwm(dut):
     dut._log.info("PWM test completed successfully")
 
 @cocotb.test()
+async def test_pwm_ch(dut):
+    dut._log.info("Start")
+
+    # Set the clock period to 100 ns (10 MHz)
+    clock = Clock(dut.clk, 100, units="ns")
+    cocotb.start_soon(clock.start())
+
+    # Reset
+    dut._log.info("Reset")
+    dut.ena.value = 1
+    ncs = 1
+    bit = 0
+    sclk = 0
+    dut.ui_in.value = ui_in_logicarray(ncs, bit, sclk)
+    dut.rst_n.value = 0
+    await ClockCycles(dut.clk, 5)
+    dut.rst_n.value = 1
+    await ClockCycles(dut.clk, 5)
+
+    dut._log.info("Test project behavior")
+    dut._log.info("Write transaction, address 0x00, data 0xF4")
+    ui_in_val, cipo_data = await send_spi_transaction(dut, 1, 0x00, 0xFF)  # Write transaction
+    await ClockCycles(dut.clk, 100)
+
+    dut._log.info("Write transaction, address 0x01, data 0xF0")
+    ui_in_val, cipo_data = await send_spi_transaction(dut, 1, 0x01, 0xFF)  # Write transaction
+    await ClockCycles(dut.clk, 100)
+
+    dut._log.info("Write transaction, address 0x03, data 0b11100100")
+    ui_in_val, cipo_data = await send_spi_transaction(dut, 1, 0x03, 0b11100100)  # Write transaction
+    await ClockCycles(dut.clk, 100)
+
+    dut._log.info(f"Write transaction, address 0x04, data {hex(0x80)}, duty cycle {0x80/256:.3%}")
+    ui_in_val, cipo_data = await send_spi_transaction(dut, 1, 0x04, 0x80)  # Write transaction
+    await ClockCycles(dut.clk, 100)
+
+    dut._log.info(f"Write transaction, address 0x05, data {hex(0x40)}, duty cycle {0x40/256:.3%}")
+    ui_in_val, cipo_data = await send_spi_transaction(dut, 1, 0x05, 0x40)  # Write transaction
+    await ClockCycles(dut.clk, 100)
+
+    dut._log.info(f"Write transaction, address 0x06, data {hex(0x20)}, duty cycle {0x20/256:.3%}")
+    ui_in_val, cipo_data = await send_spi_transaction(dut, 1, 0x06, 0x20)  # Write transaction
+    await ClockCycles(dut.clk, 100)
+
+    dut._log.info(f"Write transaction, address 0x07, data {hex(0x10)}, duty cycle {0x10/256:.3%}")
+    ui_in_val, cipo_data = await send_spi_transaction(dut, 1, 0x07, 0x10)  # Write transaction
+    await ClockCycles(dut.clk, 100)
+
+    dut._log.info("Write transaction, address 0x08, data 0x35")
+    ui_in_val, cipo_data = await send_spi_transaction(dut, 1, 0x08, 0x35)  # Write transaction
+    await ClockCycles(dut.clk, 100)
+
+    await ClockCycles(dut.clk, 300000)
+    dut._log.info("PWM channel test completed successfully")
+
+@cocotb.test()
 async def test_clk_div(dut):
     dut._log.info("Start")
 

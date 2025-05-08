@@ -71,10 +71,10 @@ module pwm_peripheral (
         if (reg_en_pwm_out[0] & reg_en_out[0]) begin
         // Connect the output channel 0 to the pwm channel/generator based on the register values (00 for generator 0 channel 0, 01 for generator 0 channel 1, 10 for generator 1 channel 0, etc.)
         case (reg_out_3_0_pwm_gen_channel[1:0])
-            2'b00: out[0] <= pwm_signal_gen_0_ch_0;
-            2'b01: out[0] <= pwm_signal_gen_0_ch_1;
-            2'b10: out[0] <= pwm_signal_gen_1_ch_0;
-            2'b11: out[0] <= pwm_signal_gen_1_ch_1;
+            2'b00: out[0] = pwm_signal_gen_0_ch_0;
+            2'b01: out[0] = pwm_signal_gen_0_ch_1;
+            2'b10: out[0] = pwm_signal_gen_1_ch_0;
+            2'b11: out[0] = pwm_signal_gen_1_ch_1;
             default: out[0] <= 1'b0; // Default case to avoid latches
         endcase
         end else begin
@@ -84,10 +84,10 @@ module pwm_peripheral (
         // Check if the PWM is enabled for output channel 1
         if (reg_en_pwm_out[1] & reg_en_out[1]) begin
         case (reg_out_3_0_pwm_gen_channel[3:2])
-            2'b00: out[1] <= pwm_signal_gen_0_ch_0;
-            2'b01: out[1] <= pwm_signal_gen_0_ch_1;
-            2'b10: out[1] <= pwm_signal_gen_1_ch_0;
-            2'b11: out[1] <= pwm_signal_gen_1_ch_1;
+            2'b00: out[1] = pwm_signal_gen_0_ch_0;
+            2'b01: out[1] = pwm_signal_gen_0_ch_1;
+            2'b10: out[1] = pwm_signal_gen_1_ch_0;
+            2'b11: out[1] = pwm_signal_gen_1_ch_1;
             default: out[1] <= 1'b0; // Default case to avoid latches
         endcase
         end else begin
@@ -97,10 +97,10 @@ module pwm_peripheral (
         // Check if the PWM is enabled for output channel 2
         if (reg_en_pwm_out[2] & reg_en_out[2]) begin
         case (reg_out_3_0_pwm_gen_channel[5:4])
-            2'b00: out[2] <= pwm_signal_gen_0_ch_0;
-            2'b01: out[2] <= pwm_signal_gen_0_ch_1;
-            2'b10: out[2] <= pwm_signal_gen_1_ch_0;
-            2'b11: out[2] <= pwm_signal_gen_1_ch_1;
+            2'b00: out[2] = pwm_signal_gen_0_ch_0;
+            2'b01: out[2] = pwm_signal_gen_0_ch_1;
+            2'b10: out[2] = pwm_signal_gen_1_ch_0;
+            2'b11: out[2] = pwm_signal_gen_1_ch_1;
             default: out[2] <= 1'b0; // Default case to avoid latches
         endcase
         end else begin
@@ -110,10 +110,10 @@ module pwm_peripheral (
         // Check if the PWM is enabled for output channel 3
         if (reg_en_pwm_out[3] & reg_en_out[3]) begin
         case (reg_out_3_0_pwm_gen_channel[7:6])
-            2'b00: out[3] <= pwm_signal_gen_0_ch_0;
-            2'b01: out[3] <= pwm_signal_gen_0_ch_1;
-            2'b10: out[3] <= pwm_signal_gen_1_ch_0;
-            2'b11: out[3] <= pwm_signal_gen_1_ch_1;
+            2'b00: out[3] = pwm_signal_gen_0_ch_0;
+            2'b01: out[3] = pwm_signal_gen_0_ch_1;
+            2'b10: out[3] = pwm_signal_gen_1_ch_0;
+            2'b11: out[3] = pwm_signal_gen_1_ch_1;
             default: out[3] <= 1'b0; // Default case to avoid latches
         endcase
         end else begin
@@ -123,10 +123,10 @@ module pwm_peripheral (
         // Check if the PWM is enabled for output channel 4
         if (reg_en_pwm_out[4] & reg_en_out[4]) begin
         case (reg_out_7_4_pwm_gen_channel[1:0])
-            2'b00: out[4] <= pwm_signal_gen_0_ch_0;
-            2'b01: out[4] <= pwm_signal_gen_0_ch_1;
-            2'b10: out[4] <= pwm_signal_gen_1_ch_0;
-            2'b11: out[4] <= pwm_signal_gen_1_ch_1;
+            2'b00: out[4] = pwm_signal_gen_0_ch_0;
+            2'b01: out[4] = pwm_signal_gen_0_ch_1;
+            2'b10: out[4] = pwm_signal_gen_1_ch_0;
+            2'b11: out[4] = pwm_signal_gen_1_ch_1;
             default: out[4] <= 1'b0; // Default case to avoid latches
         endcase
         end else begin
@@ -136,10 +136,10 @@ module pwm_peripheral (
         // Check if the PWM is enabled for output channel 5
         if (reg_en_pwm_out[5] & reg_en_out[5]) begin
         case (reg_out_7_4_pwm_gen_channel[3:2])
-            2'b00: out[5] <= pwm_signal_gen_0_ch_0;
-            2'b01: out[5] <= pwm_signal_gen_0_ch_1;
-            2'b10: out[5] <= pwm_signal_gen_1_ch_0;
-            2'b11: out[5] <= pwm_signal_gen_1_ch_1;
+            2'b00: out[5] = pwm_signal_gen_0_ch_0;
+            2'b01: out[5] = pwm_signal_gen_0_ch_1;
+            2'b10: out[5] = pwm_signal_gen_1_ch_0;
+            2'b11: out[5] = pwm_signal_gen_1_ch_1;
             default: out[5] <= 1'b0; // Default case to avoid latches
         endcase
         end else begin
@@ -149,10 +149,10 @@ module pwm_peripheral (
         // Check if the PWM is enabled for output channel 6
         if (reg_en_pwm_out[6] & reg_en_out[6]) begin
         case (reg_out_7_4_pwm_gen_channel[5:4])
-            2'b00: out[6] <= pwm_signal_gen_0_ch_0;
-            2'b01: out[6] <= pwm_signal_gen_0_ch_1;
-            2'b10: out[6] <= pwm_signal_gen_1_ch_0;
-            2'b11: out[6] <= pwm_signal_gen_1_ch_1;
+            2'b00: out[6] = pwm_signal_gen_0_ch_0;
+            2'b01: out[6] = pwm_signal_gen_0_ch_1;
+            2'b10: out[6] = pwm_signal_gen_1_ch_0;
+            2'b11: out[6] = pwm_signal_gen_1_ch_1;
             default: out[6] <= 1'b0; // Default case to avoid latches
         endcase
         end else begin
@@ -162,10 +162,10 @@ module pwm_peripheral (
         // Check if the PWM is enabled for output channel 7
         if (reg_en_pwm_out[7] & reg_en_out[7]) begin
         case (reg_out_7_4_pwm_gen_channel[7:6])
-            2'b00: out[7] <= pwm_signal_gen_0_ch_0;
-            2'b01: out[7] <= pwm_signal_gen_0_ch_1;
-            2'b10: out[7] <= pwm_signal_gen_1_ch_0;
-            2'b11: out[7] <= pwm_signal_gen_1_ch_1;
+            2'b00: out[7] = pwm_signal_gen_0_ch_0;
+            2'b01: out[7] = pwm_signal_gen_0_ch_1;
+            2'b10: out[7] = pwm_signal_gen_1_ch_0;
+            2'b11: out[7] = pwm_signal_gen_1_ch_1;
             default: out[7] <= 1'b0; // Default case to avoid latches
         endcase
         end else begin
