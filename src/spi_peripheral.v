@@ -62,7 +62,7 @@ module spi_peripheral (
         if (!rst_n) begin
             shift_reg <= 8'b0;
             cipo_shift_reg <= 8'b0;
-            bit_count <= 4'b0;
+            bit_count <= 5'b0;
             address_reg <= 7'b0;
             transaction_valid <= 1'b0;
             transaction_ready <= 1'b0;
@@ -74,12 +74,12 @@ module spi_peripheral (
                 bit_count <= bit_count + 1'b1;
                 
                 // Validate first bit (must be 1 for valid transaction)
-                if (bit_count == 4'd0) begin
+                if (bit_count == 5'd0) begin
                     transaction_valid <= (COPI_sync[1] == 1'b1);
                 end
                 
                 // At bit 7, we've received all address bits
-                if (bit_count == 4'd7) begin
+                if (bit_count == 5'd7) begin
                     // Store address for validation
                     address_reg <= {shift_reg[5:0], COPI_sync[1]};
                     
@@ -107,14 +107,14 @@ module spi_peripheral (
             // Process CIPO on falling edge of SCLK
             if (sclk_negedge) begin
                 // Update cipo_shift_reg only after first byte (after bit 8)
-                if (bit_count > 4'd8) begin
+                if (bit_count > 5'd8) begin
                     // Shift out next bit for CIPO
                     cipo_shift_reg <= {cipo_shift_reg[6:0], 1'b0};
                 end
             end
         end else begin  // CS inactive
             // Handle transaction completion
-            if (nCS_posedge && transaction_valid && bit_count >= 4'd16) begin
+            if (nCS_posedge && transaction_valid && bit_count >= 5'd16) begin
                 transaction_ready <= 1'b1;
             end 
             if (transaction_processed) begin
@@ -123,7 +123,7 @@ module spi_peripheral (
             end
             
             // Reset bit counter for next transaction
-            bit_count <= 4'b0;
+            bit_count <= 5'b0;
         end
     end
     
@@ -153,6 +153,9 @@ module spi_peripheral (
                     7'b0000110: reg_pwm_gen_1_ch_0_duty_cycle <= shift_reg;
                     7'b0000111: reg_pwm_gen_1_ch_1_duty_cycle <= shift_reg;
                     7'b0001000: reg_pwm_gen_1_0_frequency_divider <= shift_reg;
+                    default: begin
+                        // Invalid address, do nothing
+                    end
                 endcase
             end
             transaction_processed <= 1'b1;
