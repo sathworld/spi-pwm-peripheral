@@ -74,10 +74,10 @@ module pwm_peripheral (
 
     // Generate the output using a mux-based approach
     genvar out_ch_iter;
+    wire [15:0] pwm_gen_channel = {reg_out_7_4_pwm_gen_channel, reg_out_3_0_pwm_gen_channel};
     generate
         for (out_ch_iter = 0; out_ch_iter < 8; out_ch_iter = out_ch_iter + 1) begin : gen_pwm_output
             // Extract the channel select bits based on pin number
-            wire [15:0] pwm_gen_channel = {reg_out_7_4_pwm_gen_channel, reg_out_3_0_pwm_gen_channel};
             wire [1:0] channel_select = pwm_gen_channel[out_ch_iter * 2 + 2: out_ch_iter * 2];
             
             // Implement output mux
