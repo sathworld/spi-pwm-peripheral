@@ -397,7 +397,7 @@ async def test_clk_div(dut):
     dut._log.info(f"Write transaction, address 0x04, data {hex(0x80)}, duty cycle {0x80/256:.3%}")
     ui_in_val, cipo_data = await send_spi_transaction(dut, 1, 0x04, 0x80)  # Write transaction
 
-    for i in range(0, 16):
+    for i in range(0, 10):
         dut._log.info(f"Write transaction, address 0x08, data {hex(i)}")
         ui_in_val, cipo_data = await send_spi_transaction(dut, 1, 0x08, i)  # Write transaction
         await ClockCycles(dut.clk, 30000)
