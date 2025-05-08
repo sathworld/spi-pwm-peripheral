@@ -65,52 +65,28 @@ module pwm_peripheral (
         end
     end
 
-    // Continuous assignment for output channels using ternary operators
-    assign out[0] = (reg_en_pwm_out[0] & reg_en_out[0]) ? 
-                   ((reg_out_3_0_pwm_gen_channel[1:0] == 2'b00) ? pwm_signal_gen_0_ch_0 :
-                    (reg_out_3_0_pwm_gen_channel[1:0] == 2'b01) ? pwm_signal_gen_0_ch_1 :
-                    (reg_out_3_0_pwm_gen_channel[1:0] == 2'b10) ? pwm_signal_gen_1_ch_0 :
-                    pwm_signal_gen_1_ch_1) : reg_en_out[0];
+    // Define all PWM signals in an array for easier muxing
+    wire [3:0] pwm_signals;
+    assign pwm_signals[0] = pwm_signal_gen_0_ch_0;
+    assign pwm_signals[1] = pwm_signal_gen_0_ch_1;
+    assign pwm_signals[2] = pwm_signal_gen_1_ch_0;
+    assign pwm_signals[3] = pwm_signal_gen_1_ch_1;
 
-    assign out[1] = (reg_en_pwm_out[1] & reg_en_out[1]) ? 
-                   ((reg_out_3_0_pwm_gen_channel[3:2] == 2'b00) ? pwm_signal_gen_0_ch_0 :
-                    (reg_out_3_0_pwm_gen_channel[3:2] == 2'b01) ? pwm_signal_gen_0_ch_1 :
-                    (reg_out_3_0_pwm_gen_channel[3:2] == 2'b10) ? pwm_signal_gen_1_ch_0 :
-                    pwm_signal_gen_1_ch_1) : reg_en_out[1];
-
-    assign out[2] = (reg_en_pwm_out[2] & reg_en_out[2]) ? 
-                   ((reg_out_3_0_pwm_gen_channel[5:4] == 2'b00) ? pwm_signal_gen_0_ch_0 :
-                    (reg_out_3_0_pwm_gen_channel[5:4] == 2'b01) ? pwm_signal_gen_0_ch_1 :
-                    (reg_out_3_0_pwm_gen_channel[5:4] == 2'b10) ? pwm_signal_gen_1_ch_0 :
-                    pwm_signal_gen_1_ch_1) : reg_en_out[2];
-
-    assign out[3] = (reg_en_pwm_out[3] & reg_en_out[3]) ? 
-                   ((reg_out_3_0_pwm_gen_channel[7:6] == 2'b00) ? pwm_signal_gen_0_ch_0 :
-                    (reg_out_3_0_pwm_gen_channel[7:6] == 2'b01) ? pwm_signal_gen_0_ch_1 :
-                    (reg_out_3_0_pwm_gen_channel[7:6] == 2'b10) ? pwm_signal_gen_1_ch_0 :
-                    pwm_signal_gen_1_ch_1) : reg_en_out[3];
-
-    assign out[4] = (reg_en_pwm_out[4] & reg_en_out[4]) ? 
-                   ((reg_out_7_4_pwm_gen_channel[1:0] == 2'b00) ? pwm_signal_gen_0_ch_0 :
-                    (reg_out_7_4_pwm_gen_channel[1:0] == 2'b01) ? pwm_signal_gen_0_ch_1 :
-                    (reg_out_7_4_pwm_gen_channel[1:0] == 2'b10) ? pwm_signal_gen_1_ch_0 :
-                    pwm_signal_gen_1_ch_1) : reg_en_out[4];
-
-    assign out[5] = (reg_en_pwm_out[5] & reg_en_out[5]) ? 
-                   ((reg_out_7_4_pwm_gen_channel[3:2] == 2'b00) ? pwm_signal_gen_0_ch_0 :
-                    (reg_out_7_4_pwm_gen_channel[3:2] == 2'b01) ? pwm_signal_gen_0_ch_1 :
-                    (reg_out_7_4_pwm_gen_channel[3:2] == 2'b10) ? pwm_signal_gen_1_ch_0 :
-                    pwm_signal_gen_1_ch_1) : reg_en_out[5];
-
-    assign out[6] = (reg_en_pwm_out[6] & reg_en_out[6]) ? 
-                   ((reg_out_7_4_pwm_gen_channel[5:4] == 2'b00) ? pwm_signal_gen_0_ch_0 :
-                    (reg_out_7_4_pwm_gen_channel[5:4] == 2'b01) ? pwm_signal_gen_0_ch_1 :
-                    (reg_out_7_4_pwm_gen_channel[5:4] == 2'b10) ? pwm_signal_gen_1_ch_0 :
-                    pwm_signal_gen_1_ch_1) : reg_en_out[6];
-
-    assign out[7] = (reg_en_pwm_out[7] & reg_en_out[7]) ? 
-                   ((reg_out_7_4_pwm_gen_channel[7:6] == 2'b00) ? pwm_signal_gen_0_ch_0 :
-                    (reg_out_7_4_pwm_gen_channel[7:6] == 2'b01) ? pwm_signal_gen_0_ch_1 :
-                    (reg_out_7_4_pwm_gen_channel[7:6] == 2'b10) ? pwm_signal_gen_1_ch_0 :
-                    pwm_signal_gen_1_ch_1) : reg_en_out[7];
+    // Generate the output using a mux-based approach
+    genvar out_ch_iter;
+    generate
+        for (out_ch_iter = 0; out_ch_iter < 8; out_ch_iter = out_ch_iter + 1) begin : gen_pwm_output
+            // Extract the channel select bits based on pin number
+            wire [1:0] channel_select = (out_ch_iter < 4) ? 
+                                      reg_out_3_0_pwm_gen_channel[(out_ch_iter*2)+1:out_ch_iter*2] : 
+                                      reg_out_7_4_pwm_gen_channel[((out_ch_iter-4)*2)+1:(out_ch_iter-4)*2];
+            
+            // Implement output mux
+            wire pin_enable = reg_en_pwm_out[out_ch_iter] & reg_en_out[out_ch_iter];
+            wire pwm_out = pwm_signals[channel_select];
+            
+            // Final output selection
+            assign out[out_ch_iter] = pin_enable ? pwm_out : reg_en_out[out_ch_iter];
+        end
+    endgenerate
 endmodule
