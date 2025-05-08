@@ -77,9 +77,8 @@ module pwm_peripheral (
     generate
         for (out_ch_iter = 0; out_ch_iter < 8; out_ch_iter = out_ch_iter + 1) begin : gen_pwm_output
             // Extract the channel select bits based on pin number
-            wire [1:0] channel_select = (out_ch_iter < 4) ? 
-                                      reg_out_3_0_pwm_gen_channel[(out_ch_iter*2)+1:out_ch_iter*2] : 
-                                      reg_out_7_4_pwm_gen_channel[((out_ch_iter-4)*2)+1:(out_ch_iter-4)*2];
+            wire [15:0] pwm_gen_channel = {reg_out_7_4_pwm_gen_channel, reg_out_3_0_pwm_gen_channel};
+            wire [1:0] channel_select = pwm_gen_channel[out_ch_iter * 2 +: 2];
             
             // Implement output mux
             wire pin_enable = reg_en_pwm_out[out_ch_iter] & reg_en_out[out_ch_iter];
