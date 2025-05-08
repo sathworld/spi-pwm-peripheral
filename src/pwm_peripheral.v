@@ -52,9 +52,6 @@ module pwm_peripheral (
             clk_div_counter_gen_0 <= clk_div_counter_gen_0 + 1;
             clk_div_counter_gen_1 <= clk_div_counter_gen_1 + 1;
         end
-    end
-
-    always @(*) begin
         // Check if the clock divider counter has reached the desired value for each PWM generator
         if (clk_div_counter_gen_0 >= 16'h0001 << reg_pwm_gen_1_0_frequency_divider[3:0]) begin
             clk_div_counter_gen_0 <= 0; // Reset the clock divider counter
@@ -67,6 +64,9 @@ module pwm_peripheral (
             pwm_counter_gen_1_ch_0 <= pwm_counter_gen_1_ch_0 + 1;
             pwm_counter_gen_1_ch_1 <= pwm_counter_gen_1_ch_1 + 1;
         end
+    end
+
+    always @(*) begin
 
         // Check if the PWM is enabled for output channel 0
         if (reg_en_pwm_out[0] & reg_en_out[0]) begin
